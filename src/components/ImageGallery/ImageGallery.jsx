@@ -10,7 +10,7 @@ export const ImageGallery = ({ pics }) => {
           return (
             <ImageGalleryItem
               key={id}
-              // id={id}
+              id={id}
               webformatURL={webformatURL}
               largeImageURL={largeImageURL}
               alt={tags}
