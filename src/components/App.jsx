@@ -28,6 +28,12 @@ export const App = () => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (isMounted) {
+      loadPics();
+    } // eslint-disable-next-line
+  }, [searchValue, page]);
+
   const loadPics = async () => {
     try {
       setIsLoading(true);
@@ -39,16 +45,9 @@ export const App = () => {
       setTotalPages(totalImgPages);
     } catch (error) {
       setError(error);
-    } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (isMounted) {
-      loadPics();
-    }
-  }, [searchValue, page, isMounted]);
 
   return (
     <>
