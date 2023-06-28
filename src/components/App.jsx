@@ -29,26 +29,35 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+    const loadPics = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetchPics(searchValue, page);
+        const newPics = response.hits;
+        const totalImgPages = Math.ceil(response.totalHits / PER_PAGE);
+        setPics([...pics, ...newPics]);
+        setIsLoading(false);
+        setTotalPages(totalImgPages);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (isMounted) {
       loadPics();
     }
-  }, [searchValue, page, isMounted]);
-
-  const loadPics = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetchPics(searchValue, page);
-      const newPics = response.hits;
-      const totalImgPages = Math.ceil(response.totalHits / PER_PAGE);
-      setPics([...pics, ...newPics]);
-      setIsLoading(false);
-      setTotalPages(totalImgPages);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [
+    searchValue,
+    page,
+    isMounted,
+    setPics,
+    setIsLoading,
+    setTotalPages,
+    setError,
+    pics,
+  ]);
 
   return (
     <>

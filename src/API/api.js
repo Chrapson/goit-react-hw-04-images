@@ -14,12 +14,6 @@ axios.defaults.params = {
 export const fetchPics = async (searchValue, page) => {
   const response = await axios.get(`/?q=${searchValue}&page=${page}`);
 
-  const filteredResponse = response.data.hits.map(hit => ({
-    id: hit.id,
-    small: hit.webformatURL,
-    large: hit.largeImageURL,
-  }));
-
   return response.data;
 };
 
