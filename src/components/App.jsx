@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Searchbar from './Searchbar/Searchbar';
+import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { fetchPics, PER_PAGE } from '../API/api';
@@ -14,41 +14,45 @@ export const App = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
-  const handleSearch = searchValue => {
-    setSearchValue(searchValue);
+  const handleSearch = e => {
+    e.preventDefault();
+    const searchKeyWord = e.target.elements.search.value;
+    if (searchKeyWord !== searchValue) {
+      setSearchValue(searchKeyWord);
+      setPage(1);
+      setPics([]);
+    }
   };
 
   const handleLoadMore = () => {
     setPage(page + 1);
   };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
   useEffect(() => {
     if (isMounted) {
-      const loadPics = async () => {
-        try {
-          setIsLoading(true);
-          const response = await fetchPics(searchValue, page);
-          const newPics = response.hits;
-          const totalImgPages = Math.ceil(response.totalHits / PER_PAGE);
-          setPics([...newPics]);
-          setIsLoading(false);
-          setTotalPages(totalImgPages);
-        } catch (error) {
-          setError(error);
-          setIsLoading(false);
-        }
-      };
-
       loadPics();
     }
-  }, [searchValue, page, isMounted]);
-  // useEffect(() => {
-  //   if (isMounted) {
-  //     loadPics();
-  //   }
-  // }, [searchValue, page, loadPics, isMounted]);
+  }, [searchValue, page]);
+
+  const loadPics = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetchPics(searchValue, page);
+      const newPics = response.hits;
+      const totalImgPages = Math.ceil(response.totalHits / PER_PAGE);
+      setPics([...pics, ...newPics]);
+      setIsLoading(false);
+      setTotalPages(totalImgPages);
+    } catch (error) {
+      setError(error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <Searchbar handleSearch={handleSearch} />
