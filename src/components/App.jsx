@@ -51,7 +51,7 @@ export const App = () => {
     if (isMounted) {
       loadPics();
     } //eslint-disable-next-line
-  }, [searchValue, page, isMounted]);
+  }, [searchValue, page]);
 
   return (
     <>
