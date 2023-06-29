@@ -16,39 +16,39 @@ export const App = () => {
 
   const handleSearch = searchValue => {
     setSearchValue(searchValue);
-    setPics([]);
-    setPage(1);
   };
 
   const handleLoadMore = () => {
     setPage(page + 1);
   };
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
   useEffect(() => {
     if (isMounted) {
+      const loadPics = async () => {
+        try {
+          setIsLoading(true);
+          const response = await fetchPics(searchValue, page);
+          const newPics = response.hits;
+          const totalImgPages = Math.ceil(response.totalHits / PER_PAGE);
+          setPics([...newPics]);
+          setIsLoading(false);
+          setTotalPages(totalImgPages);
+        } catch (error) {
+          setError(error);
+          setIsLoading(false);
+        }
+      };
+
       loadPics();
-    } // eslint-disable-next-line
-  }, [searchValue, page]);
-
-  const loadPics = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetchPics(searchValue, page);
-      const newPics = response.hits;
-      const totalImgPages = Math.ceil(response.totalHits / PER_PAGE);
-      setPics([...pics, ...newPics]);
-      setIsLoading(false);
-      setTotalPages(totalImgPages);
-    } catch (error) {
-      setError(error);
-      setIsLoading(false);
     }
-  };
-
+  }, [searchValue, page, isMounted]);
+  // useEffect(() => {
+  //   if (isMounted) {
+  //     loadPics();
+  //   }
+  // }, [searchValue, page, loadPics, isMounted]);
   return (
     <>
       <Searchbar handleSearch={handleSearch} />
