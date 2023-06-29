@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
@@ -32,13 +32,7 @@ export const App = () => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (isMounted) {
-      loadPics();
-    }
-  }, [searchValue, page]);
-
-  const loadPics = async () => {
+  const loadPics = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetchPics(searchValue, page);
@@ -51,7 +45,13 @@ export const App = () => {
       setError(error);
       setIsLoading(false);
     }
-  };
+  }, [page, searchValue]);
+
+  useEffect(() => {
+    if (isMounted) {
+      loadPics();
+    }
+  }, [searchValue, page, isMounted, loadPics]);
 
   return (
     <>
