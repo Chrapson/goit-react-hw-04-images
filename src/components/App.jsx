@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
@@ -32,7 +32,7 @@ export const App = () => {
     setIsMounted(true);
   }, []);
 
-  const loadPics = useCallback(async () => {
+  const loadPics = async () => {
     try {
       setIsLoading(true);
       const response = await fetchPics(searchValue, page);
@@ -45,13 +45,13 @@ export const App = () => {
       setError(error);
       setIsLoading(false);
     }
-  }, [page, searchValue]);
+  };
 
   useEffect(() => {
     if (isMounted) {
       loadPics();
-    }
-  }, [searchValue, page, isMounted, loadPics]);
+    } //eslint-disable-next-line
+  }, [searchValue, page, isMounted]);
 
   return (
     <>
